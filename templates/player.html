@@ -399,11 +399,10 @@ function searchForSong(songNum) {
   }
 
   function fetchJSON() {
-    var searchUrl = 'http://gdata.youtube.com/feeds/api/videos';
+    var searchUrl = 'https://www.googleapis.com/youtube/v3/search';
     var params = {
-      'v': '2',
-      'alt': 'jsonc',
-      'format': '5',
+      part: 'snippet',
+      key: '',
       'q': encodeURIComponent(query)
     }
     JSONP.get(searchUrl, params, null, function(json) {
@@ -413,12 +412,12 @@ function searchForSong(songNum) {
   }
 
   function processJSON(json) {
-    song.results = json.data.items || [];
+    song.results = json.items || [];
     if (song.results.length == 0) {
       song.youtubeId = 'r_J6hCCQ_ng';
     } else {
-      song.youtubeId = json.data.items[0].id;
-      song.thumbnail = json.data.items[0].thumbnail.sqDefault;
+      song.youtubeId = json.items[0].id.videoId;
+      song.thumbnail = json.items[0].snippet.thumbnails.default.url;
     }
     
     // If the player is waiting for this song info, play it now
